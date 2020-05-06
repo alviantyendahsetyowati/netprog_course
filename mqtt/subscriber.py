@@ -3,6 +3,7 @@
 from urllib.parse import urlparse
 import os
 import paho.mqtt.client as mqtt
+import time 
 
 # Define event callbacks
 def on_connect(mosq, obj, rc):
@@ -20,8 +21,8 @@ def on_log(mosq, obj, level, string):
 
 username = 'your username'
 password = 'your password'
-host_url = 'your cloud broker url'
-host_port = 'your cloud broker port' # do not type string, but change to integer
+host_url = 'mqtt.eclipse.org'
+host_port = 1883     # do not type string, but change to integer
 
 mqttc = mqtt.Mosquitto()
 # Assign event callbacks
@@ -37,16 +38,17 @@ url_str = os.environ.get('CLOUDMQTT_URL', host_url)
 url = urlparse(url_str)
 
 # Connect
-username = 'your username'
-password = 'your password'
-mqttc.username_pw_set(username, password)
-mqttc.connect(url.hostname, url.port)
+#username = 'your username'
+#password = 'your password'
+#mqttc.username_pw_set(username, password)
+mqttc.connect('mqtt.eclipse.org', 1883)
 
 # Subscribe to a topic
-mqttc.subscribe('python/', 0)
+mqttc.subscribe('python/+/Alvi', 0)
 
 # Continue the network loop, exit when an error occurs
 rc = 0
 while rc == 0:
     rc = mqttc.loop()
+    time.sleep(2)
 print('Reconnect: ' + str(rc))
